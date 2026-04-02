@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('price');
-            $table->boolean('is_available');
-            $table->boolean('reserved');
+            $table->boolean('is_available')->default(true);
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

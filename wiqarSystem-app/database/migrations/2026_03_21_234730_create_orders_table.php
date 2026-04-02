@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('discount');
             $table->foreignId('user_id')->constrained();
+            $table->enum('status',['payed','not payed']);
             $table->timestamps();
         });
     }

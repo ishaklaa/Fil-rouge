@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status',['active','blocked'])->default('active');
             $table->foreignId('role_id')->constrained();
             $table->foreignId('branch_id')->constrained();
+            $table->foreignId('business_id')->constrained();
             $table->rememberToken();
             $table->timestamps();
         });

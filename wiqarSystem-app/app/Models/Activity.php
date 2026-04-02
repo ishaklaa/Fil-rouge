@@ -9,6 +9,6 @@ class Activity extends Model
     protected $fillable = ['reserved','is_available','price','title',];
     public function orders()
     {
-        return $this->belongsToMany(Order::class);
+        return $this->belongsToMany(Order::class)->withPivot('quantity');
     }
 }

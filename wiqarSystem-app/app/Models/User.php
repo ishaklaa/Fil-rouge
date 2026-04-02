@@ -52,6 +52,7 @@ class User extends Authenticatable
         'remember_token',
         'branch_id',
         'role_id',
+        'business_id',
     ];
 
     /**
