@@ -77,14 +77,23 @@ function IncreaseTotalAndSubtotalCalculate(price) {
     let subTotal = document.getElementById('subTotal');
     let TotalAmount = document.getElementById('TotalAmount');
     let discountValue = document.getElementById('discountValue');
-    if (discount !== 0) {
+    if (discount >= 0) {
         let total = parseInt(subTotal.textContent) + parseInt(price);
+        if (total <= 0) {
+            subTotal.textContent = 0;
+            discountValue.textContent = 0;
+            TotalAmount.textContent = 0;
+            return;
+        }
         subTotal.textContent = total;
         let discountAmount = (total * discount) / 100;
         discountValue.textContent = discountAmount;
         TotalAmount.textContent = total - discountAmount;
-    } else {
+    } else if(discount < 0) {
         let total = parseInt(subTotal.textContent) + parseInt(price);
+        let discountAmount = 0;
+        discountValue.textContent = discountAmount;
+        TotalAmount.textContent = total - discountAmount;
         subTotal.textContent = total;
         TotalAmount.textContent = total;
     }
@@ -96,9 +105,8 @@ function decreaseTotalAndSubtotalCalculate(price) {
     let subTotal = document.getElementById('subTotal');
     let TotalAmount = document.getElementById('TotalAmount');
     let discountValue = document.getElementById('discountValue');
-    if (discount !== 0) {
+    if (discount >= 0) {
         let total = parseInt(subTotal.textContent) - parseInt(price);
-
         if (total <= 0) {
             subTotal.textContent = 0;
             discountValue.textContent = 0;
@@ -109,8 +117,17 @@ function decreaseTotalAndSubtotalCalculate(price) {
         let discountAmount = (total * discount) / 100;
         discountValue.textContent = discountAmount;
         TotalAmount.textContent = total - discountAmount;
-    } else {
+    } else if (discount < 0){
         let total = parseInt(subTotal.textContent) - parseInt(price);
+        if (total <= 0) {
+            subTotal.textContent = 0;
+            discountValue.textContent = 0;
+            TotalAmount.textContent = 0;
+            return;
+        }
+        let discountAmount = 0;
+        discountValue.textContent = discountAmount;
+        TotalAmount.textContent = total - discountAmount;
         subTotal.textContent = total;
         TotalAmount.textContent = total;
     }
@@ -146,7 +163,7 @@ function increaseQTY() {
         btn.addEventListener('click', (e) => {
             const card = e.target.parentElement.parentElement;
             let minusBtn = card.children[1].children[0];
-            if (minusBtn.disabled = true){
+            if (minusBtn.disabled = true) {
                 minusBtn.disabled = false;
                 minusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
@@ -186,7 +203,7 @@ function decreaseQTY() {
         btn.addEventListener('click', (e) => {
             const card = e.target.parentElement.parentElement;
             let plusBtn = card.children[1].children[2];
-            if (plusBtn.disabled = true){
+            if (plusBtn.disabled = true) {
                 plusBtn.disabled = false;
                 plusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
@@ -293,8 +310,23 @@ function getActivities() {
         })
         .catch(err => console.error(err));
 }
+function discountModify() {
+    const discountModifyBtn = document.getElementById('discountModify');
+    let discountInput = document.getElementById('discountInput');
+    let discount = document.getElementById('discount');
+    discountModifyBtn.addEventListener('click', () => {
+        if (discountInput.value.trim() === '' ) {
+            discountInput.value = 0;
+        }
+        discount.textContent = 'Discount ' + discountInput.value + ' %';
+        IncreaseTotalAndSubtotalCalculate(0)
+
+    });
+}
+
 function appInit() {
     getActivities()
+    discountModify()
 }
 
 appInit();

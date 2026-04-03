@@ -150,7 +150,7 @@
 
             </div>
             <div class="flex justify-between text-sm text-red-400">
-                <span id="discount">Discount 8 %</span>
+                <span id="discount">Discount 0 %</span>
                 <div>
                     <span id="discountValue" >0</span>
                     <span>SAR</span>
@@ -162,12 +162,12 @@
             <div class="flex gap-2">
                 <div
                     class="flex-1 flex items-center bg-beige-100 border border-beige-300 rounded-xl px-3 py-2 gap-2 focus-within:border-brown-200 transition-colors">
-                    <input type="number" name="discount" value="10" min="0" max="100" placeholder="Discount"
-                           class="bg-transparent outline-none text-sm text-brown-400 w-full placeholder-beige-400">
+                    <input type="number" name="discount"  min="0" max="100" placeholder="Discount"
+                           class="bg-transparent outline-none text-sm text-brown-400 w-full placeholder-beige-400" id="discountInput">
                     <span class="text-beige-400 text-sm font-medium shrink-0">%</span>
                 </div>
                 <button
-                    class="bg-beige-200 border border-beige-300 rounded-xl px-4 text-sm font-medium text-brown-300 hover:bg-brown-200 hover:text-white hover:border-brown-200 transition-all whitespace-nowrap">
+                    class="bg-beige-200 border border-beige-300 rounded-xl px-4 text-sm font-medium text-brown-300 hover:bg-brown-200 hover:text-white hover:border-brown-200 transition-all whitespace-nowrap" id="discountModify">
                     Apply
                 </button>
             </div>
