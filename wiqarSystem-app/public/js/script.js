@@ -27,7 +27,7 @@ function moveToOrder(x) {
                 titleEl.textContent = title;
                 const priceEl = document.createElement('p');
                 priceEl.className = "text-xs text-brown-200 mt-0.5";
-                priceEl.textContent = 'price :' + price;
+                priceEl.textContent = 'price : ' + price;
                 const controls = document.createElement('div');
                 controls.className = "flex items-center gap-1.5";
                 /*const btnClass = "w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all";*/
@@ -70,7 +70,6 @@ function moveToOrder(x) {
     });
 
 }
-
 function IncreaseTotalAndSubtotalCalculate(price) {
     let disc = document.getElementById('discount');
     let discount1 = disc.textContent.split(' ');
@@ -90,7 +89,6 @@ function IncreaseTotalAndSubtotalCalculate(price) {
         TotalAmount.textContent = total;
     }
 }
-
 function decreaseTotalAndSubtotalCalculate(price) {
     let disc = document.getElementById('discount');
     let discount1 = disc.textContent.split(' ');
@@ -100,6 +98,13 @@ function decreaseTotalAndSubtotalCalculate(price) {
     let discountValue = document.getElementById('discountValue');
     if (discount !== 0) {
         let total = parseInt(subTotal.textContent) - parseInt(price);
+
+        if (total <= 0) {
+            subTotal.textContent = 0;
+            discountValue.textContent = 0;
+            TotalAmount.textContent = 0;
+            return;
+        }
         subTotal.textContent = total;
         let discountAmount = (total * discount) / 100;
         discountValue.textContent = discountAmount;
@@ -110,12 +115,14 @@ function decreaseTotalAndSubtotalCalculate(price) {
         TotalAmount.textContent = total;
     }
 }
-
 function removeOrder(x) {
     x.forEach(remove => {
             remove.addEventListener('click', (e) => {
                 const card = e.target.parentElement;
                 const info = card.children[0];
+                let price1 = parseInt(info.children[1].textContent.split(' ')[2]);
+                let quantity = parseInt(card.children[1].children[1].textContent);
+                let price = price1 * quantity;
                 const OrderCardId = info.children[2].textContent;
                 const addButton = document.querySelectorAll('.AddOrder')
                 addButton.forEach(btn => {
@@ -127,12 +134,12 @@ function removeOrder(x) {
                         card.children[2].classList.remove('opacity-50', 'cursor-not-allowed');
                     }
                 });
+                decreaseTotalAndSubtotalCalculate(price)
                 e.target.parentElement.remove();
             })
         }
     )
 }
-
 function increaseQTY() {
     let plusBtn = document.querySelectorAll('.plusBtn');
     plusBtn.forEach(btn => {
@@ -173,7 +180,6 @@ function increaseQTY() {
         })
     })
 }
-
 function decreaseQTY() {
     let minusBtn = document.querySelectorAll('.minusBtn');
     minusBtn.forEach(btn => {
@@ -213,7 +219,6 @@ function decreaseQTY() {
         })
     })
 }
-
 function getActivities() {
     fetch('/cashier/activity')
         .then(res => {
@@ -288,7 +293,6 @@ function getActivities() {
         })
         .catch(err => console.error(err));
 }
-
 function appInit() {
     getActivities()
 }

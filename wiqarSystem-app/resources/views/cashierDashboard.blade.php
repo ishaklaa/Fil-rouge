@@ -150,7 +150,7 @@
 
             </div>
             <div class="flex justify-between text-sm text-red-400">
-                <span id="discount">Discount 0 %</span>
+                <span id="discount">Discount 8 %</span>
                 <div>
                     <span id="discountValue" >0</span>
                     <span>SAR</span>
