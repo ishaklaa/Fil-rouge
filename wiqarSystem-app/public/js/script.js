@@ -34,20 +34,23 @@ function moveToOrder(x) {
                 const minusBtn = document.createElement('button');
                 minusBtn.className = "minusBtn w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all";
                 minusBtn.textContent = '−';
+                minusBtn.setAttribute('onclick', 'decreaseQTY(event)');
+
                 const qtySpan = document.createElement('span');
                 qtySpan.className = "text-sm font-semibold text-brown-400 w-5 text-center";
                 qtySpan.textContent = 1;
                 const plusBtn = document.createElement('button');
                 plusBtn.className = "plusBtn w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all";
                 plusBtn.textContent = '+';
+                plusBtn.setAttribute('onclick', 'increaseQTY(event)');
+
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = "deleteBtn w-7 h-7 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-400 hover:text-white transition-all text-xs font-bold";
                 deleteBtn.textContent = '✕';
-
+                deleteBtn.setAttribute('onclick', 'removeOrder(event)');
                 let activityId = document.createElement('span');
                 activityId.className = "hidden";
                 activityId.textContent = actID;
-
                 info.appendChild(titleEl);
                 info.appendChild(priceEl);
                 info.appendChild(activityId);
@@ -58,11 +61,7 @@ function moveToOrder(x) {
                 wrapper.appendChild(controls);
                 wrapper.appendChild(deleteBtn);
                 orderDiv.appendChild(wrapper);
-                const DeleteBtn = document.querySelectorAll('.deleteBtn');
-                removeOrder(DeleteBtn);
                 IncreaseTotalAndSubtotalCalculate(price);
-                increaseQTY();
-                decreaseQTY();
 
 
             }
@@ -70,6 +69,7 @@ function moveToOrder(x) {
     });
 
 }
+
 function IncreaseTotalAndSubtotalCalculate(price) {
     let disc = document.getElementById('discount');
     let discount1 = disc.textContent.split(' ');
@@ -77,7 +77,7 @@ function IncreaseTotalAndSubtotalCalculate(price) {
     let subTotal = document.getElementById('subTotal');
     let TotalAmount = document.getElementById('TotalAmount');
     let discountValue = document.getElementById('discountValue');
-    if (discount >= 0) {
+    if (discount >= 0 && discount <= 100) {
         let total = parseInt(subTotal.textContent) + parseInt(price);
         if (total <= 0) {
             subTotal.textContent = 0;
@@ -89,7 +89,7 @@ function IncreaseTotalAndSubtotalCalculate(price) {
         let discountAmount = (total * discount) / 100;
         discountValue.textContent = discountAmount;
         TotalAmount.textContent = total - discountAmount;
-    } else if(discount < 0) {
+    } else if (discount < 0 || discount > 100) {
         let total = parseInt(subTotal.textContent) + parseInt(price);
         let discountAmount = 0;
         discountValue.textContent = discountAmount;
@@ -98,6 +98,7 @@ function IncreaseTotalAndSubtotalCalculate(price) {
         TotalAmount.textContent = total;
     }
 }
+
 function decreaseTotalAndSubtotalCalculate(price) {
     let disc = document.getElementById('discount');
     let discount1 = disc.textContent.split(' ');
@@ -105,26 +106,14 @@ function decreaseTotalAndSubtotalCalculate(price) {
     let subTotal = document.getElementById('subTotal');
     let TotalAmount = document.getElementById('TotalAmount');
     let discountValue = document.getElementById('discountValue');
-    if (discount >= 0) {
+    if (discount >= 0  && discount <= 100) {
         let total = parseInt(subTotal.textContent) - parseInt(price);
-        if (total <= 0) {
-            subTotal.textContent = 0;
-            discountValue.textContent = 0;
-            TotalAmount.textContent = 0;
-            return;
-        }
         subTotal.textContent = total;
         let discountAmount = (total * discount) / 100;
         discountValue.textContent = discountAmount;
         TotalAmount.textContent = total - discountAmount;
-    } else if (discount < 0){
+    } else if (discount < 0 || discount > 100) {
         let total = parseInt(subTotal.textContent) - parseInt(price);
-        if (total <= 0) {
-            subTotal.textContent = 0;
-            discountValue.textContent = 0;
-            TotalAmount.textContent = 0;
-            return;
-        }
         let discountAmount = 0;
         discountValue.textContent = discountAmount;
         TotalAmount.textContent = total - discountAmount;
@@ -132,110 +121,98 @@ function decreaseTotalAndSubtotalCalculate(price) {
         TotalAmount.textContent = total;
     }
 }
-function removeOrder(x) {
-    x.forEach(remove => {
-            remove.addEventListener('click', (e) => {
-                const card = e.target.parentElement;
-                const info = card.children[0];
-                let price1 = parseInt(info.children[1].textContent.split(' ')[2]);
-                let quantity = parseInt(card.children[1].children[1].textContent);
-                let price = price1 * quantity;
-                const OrderCardId = info.children[2].textContent;
-                const addButton = document.querySelectorAll('.AddOrder')
-                addButton.forEach(btn => {
-                    const card = btn.parentElement;
-                    const info = card.children[1];
-                    const CardId = info.children[3].textContent;
-                    if (OrderCardId === CardId) {
-                        card.children[2].disabled = false;
-                        card.children[2].classList.remove('opacity-50', 'cursor-not-allowed');
-                    }
-                });
-                decreaseTotalAndSubtotalCalculate(price)
-                e.target.parentElement.remove();
-            })
+
+function removeOrder(e) {
+    const card = e.target.parentElement;
+    const info = card.children[0];
+    let price1 = parseInt(info.children[1].textContent.split(' ')[2]);
+    let quantity = parseInt(card.children[1].children[1].textContent);
+    let price = price1 * quantity;
+    const OrderCardId = info.children[2].textContent;
+    const addButton = document.querySelectorAll('.AddOrder')
+    addButton.forEach(btn => {
+        const card = btn.parentElement;
+        const info = card.children[1];
+        const CardId = info.children[3].textContent;
+        if (OrderCardId === CardId) {
+            card.children[2].disabled = false;
+            card.children[2].classList.remove('opacity-50', 'cursor-not-allowed');
         }
-    )
+    });
+    decreaseTotalAndSubtotalCalculate(price)
+    e.target.parentElement.remove();
 }
-function increaseQTY() {
-    let plusBtn = document.querySelectorAll('.plusBtn');
-    plusBtn.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const card = e.target.parentElement.parentElement;
-            let minusBtn = card.children[1].children[0];
-            if (minusBtn.disabled = true) {
-                minusBtn.disabled = false;
-                minusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+function increaseQTY(e) {
+    const card = e.target.parentElement.parentElement;
+    let minusBtn = card.children[1].children[0];
+    if (minusBtn.disabled = true) {
+        minusBtn.disabled = false;
+        minusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    const info = card.children[0];
+    let quantityHolder = card.children[1].children[1];
+    let quantityInOrder = parseInt(quantityHolder.textContent);
+    const OrderCardId = info.children[2].textContent;
+    const activityCard = document.querySelectorAll('.activityCard')
+    activityCard.forEach(card => {
+        const info = card.children[1];
+        const CardId = info.children[3].textContent;
+        if (OrderCardId === CardId) {
+            let quantity = info.children[2].textContent.split(' ');
+            let qty = parseInt(quantity[2]);
+            if (quantityInOrder < qty) {
+
+                quantityHolder.textContent = quantityInOrder + 1;
+                const price1 = info.children[1].textContent;
+                const price2 = price1.split(' ');
+                const price = price2[2];
+                IncreaseTotalAndSubtotalCalculate(price);
+
+            } else {
+                e.target.disabled = true;
+                e.target.classList.add('opacity-50', 'cursor-not-allowed')
             }
-            const info = card.children[0];
-            let quantityHolder = card.children[1].children[1];
-
-            let quantityInOrder = parseInt(quantityHolder.textContent);
-            const OrderCardId = info.children[2].textContent;
-            const activityCard = document.querySelectorAll('.activityCard')
-            activityCard.forEach(card => {
-                const info = card.children[1];
-                const CardId = info.children[3].textContent;
-                if (OrderCardId === CardId) {
-                    let quantity = info.children[2].textContent.split(' ');
-                    let qty = parseInt(quantity[2]);
-                    if (quantityInOrder < qty) {
-
-                        quantityHolder.textContent = quantityInOrder + 1;
-                        const price1 = info.children[1].textContent;
-                        const price2 = price1.split(' ');
-                        const price = price2[2];
-                        IncreaseTotalAndSubtotalCalculate(price);
-
-                    } else {
-                        btn.disabled = true;
-                        btn.classList.add('opacity-50', 'cursor-not-allowed')
-                    }
-                }
-            });
-
-        })
-    })
+        }
+    });
 }
-function decreaseQTY() {
-    let minusBtn = document.querySelectorAll('.minusBtn');
-    minusBtn.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const card = e.target.parentElement.parentElement;
-            let plusBtn = card.children[1].children[2];
-            if (plusBtn.disabled = true) {
-                plusBtn.disabled = false;
-                plusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+function decreaseQTY(e) {
+    const card = e.target.parentElement.parentElement;
+    let plusBtn = card.children[1].children[2];
+    if (plusBtn.disabled = true) {
+        plusBtn.disabled = false;
+        plusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    const info = card.children[0];
+    let quantityHolder = card.children[1].children[1];
+    let quantityInOrder = parseInt(quantityHolder.textContent);
+    const OrderCardId = info.children[2].textContent;
+    const activityCard = document.querySelectorAll('.activityCard')
+    activityCard.forEach(card => {
+        const info = card.children[1];
+        const CardId = info.children[3].textContent;
+        if (OrderCardId === CardId) {
+            let quantity = info.children[2].textContent.split(' ');
+            let qty = parseInt(quantity[2]);
+            if (quantityInOrder > 1) {
+
+                quantityHolder.textContent = quantityInOrder - 1;
+                const price1 = info.children[1].textContent;
+                const price2 = price1.split(' ');
+                const price = price2[2];
+                decreaseTotalAndSubtotalCalculate(price);
+
+            } else {
+                e.target.disabled = true;
+                e.target.classList.add('opacity-50', 'cursor-not-allowed');
             }
-            const info = card.children[0];
-            let quantityHolder = card.children[1].children[1];
-            let quantityInOrder = parseInt(quantityHolder.textContent);
-            const OrderCardId = info.children[2].textContent;
-            const activityCard = document.querySelectorAll('.activityCard')
-            activityCard.forEach(card => {
-                const info = card.children[1];
-                const CardId = info.children[3].textContent;
-                if (OrderCardId === CardId) {
-                    let quantity = info.children[2].textContent.split(' ');
-                    let qty = parseInt(quantity[2]);
-                    if (quantityInOrder > 1) {
+        }
+    });
 
-                        quantityHolder.textContent = quantityInOrder - 1;
-                        const price1 = info.children[1].textContent;
-                        const price2 = price1.split(' ');
-                        const price = price2[2];
-                        decreaseTotalAndSubtotalCalculate(price);
 
-                    } else {
-                        btn.disabled = true;
-                        btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    }
-                }
-            });
-
-        })
-    })
 }
+
 function getActivities() {
     fetch('/cashier/activity')
         .then(res => {
@@ -310,12 +287,13 @@ function getActivities() {
         })
         .catch(err => console.error(err));
 }
+
 function discountModify() {
     const discountModifyBtn = document.getElementById('discountModify');
     let discountInput = document.getElementById('discountInput');
     let discount = document.getElementById('discount');
     discountModifyBtn.addEventListener('click', () => {
-        if (discountInput.value.trim() === '' ) {
+        if (discountInput.value.trim() === '') {
             discountInput.value = 0;
         }
         discount.textContent = 'Discount ' + discountInput.value + ' %';
