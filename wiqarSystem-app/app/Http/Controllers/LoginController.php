@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function show (){
+    public function show()
+    {
         return view('loginPage');
     }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string|min:8',
         ]);
 
@@ -22,10 +24,14 @@ class LoginController extends Controller
                 'email' => 'Invalid email or password.',
             ])->onlyInput('email');
         }
-        if (Auth::user()->role_id == 3){
-            return view('cashierDashboard');
+
+        $request->session()->regenerate();
+
+        if (Auth::user()->role_id == 3) {
+            return redirect()->route('cashier.dashboard');
         }
 
+        return redirect('/');
     }
 
     public function logout()

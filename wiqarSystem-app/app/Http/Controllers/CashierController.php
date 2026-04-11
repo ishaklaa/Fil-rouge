@@ -12,7 +12,7 @@ class CashierController extends Controller
     public function index()
     {
         $activities = Activity::all() ?? collect();
-
             return view('cashierDashboard', compact('activities'));
         }
+
 }

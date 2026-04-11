@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('price');
             $table->boolean('is_available')->default(true);
             $table->integer('quantity');
+
+
             $table->timestamps();
         });
     }

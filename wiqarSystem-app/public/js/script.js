@@ -106,7 +106,7 @@ function decreaseTotalAndSubtotalCalculate(price) {
     let subTotal = document.getElementById('subTotal');
     let TotalAmount = document.getElementById('TotalAmount');
     let discountValue = document.getElementById('discountValue');
-    if (discount >= 0  && discount <= 100) {
+    if (discount >= 0 && discount <= 100) {
         let total = parseInt(subTotal.textContent) - parseInt(price);
         subTotal.textContent = total;
         let discountAmount = (total * discount) / 100;
@@ -263,10 +263,6 @@ function getActivities() {
                 AddButton.setAttribute('id', "addToOrder");
                 AddButton.textContent = 'Add to Order';
 
-                if (activity.quantity === 0) {
-                    AddButton.disabled = true;
-                    AddButton.classList.add('opacity-50', 'cursor-not-allowed');
-                }
 
                 card.appendChild(decorateLine);
                 price.appendChild(SAR);
@@ -277,8 +273,15 @@ function getActivities() {
                 infos.appendChild(activityId);
                 card.appendChild(infos);
                 card.appendChild(AddButton);
-
+                if (!activity.is_available) {
+                    AddButton.remove();
+                    const unavailable = document.createElement('p');
+                    unavailable.className = "text-center text-sm text-red-400 font-medium mt-auto";
+                    unavailable.textContent = 'Unavailable';
+                    card.appendChild(unavailable);
+                }
                 div.appendChild(card);
+
             });
             const addOrder = document.querySelectorAll('.AddOrder');
             moveToOrder(addOrder);
@@ -302,9 +305,67 @@ function discountModify() {
     });
 }
 
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `fixed bottom-5 right-5 px-4 py-3 rounded-xl text-white text-sm font-medium shadow-lg transition-all ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    }`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function checkOut() {
+    let discount = parseInt(document.getElementById('discount').textContent.split(' ')[1]);
+
+    let orders = [];
+    let activitiesDiv = document.getElementById("orderDiv");
+    Array.from(activitiesDiv.children).forEach(act => {
+        let id = parseInt(act.children[0].children[2].textContent);
+        let qty = parseInt(act.children[1].children[1].textContent);
+        orders.push({
+            id: id,
+            qty: qty
+        })
+    })
+
+    fetch('/cashier/checkout', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            orders: orders,
+            discount: discount
+        })
+    })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(err => {
+                    throw err;
+                }).catch(() => {
+                    throw { message: 'Server error (500)' };
+                });
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.errors) {
+                data.errors.forEach(error => showToast(error, 'error'));
+            } else {
+                showToast(data.message, 'success');
+            }
+        })
+        .catch(err => console.error(err));
+}
+
 function appInit() {
     getActivities()
     discountModify()
+
 }
 
 appInit();
