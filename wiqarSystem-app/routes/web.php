@@ -15,8 +15,10 @@ Route::get('/cashier/dashboard', function () {
 })->middleware('auth')->name('cashier.dashboard');
 Route::get('/login',[LoginController::class,'show'])->name('login.show');
 Route::post('/login',[LoginController::class,'store'])->name('login.store');
+Route::get('/logout',[LoginController::class,'logout']);
 /*Route::get('/cashier/activity',[CashierController::class,'index'])->name('cashier.index');*/
 Route::get('/cashier/activity',[ActivityController::class,'index'])->name('activity.index');
 Route::post('/cashier/checkout',[OrderController::class,'store']);
 Route::post('/cashier/receipt',[TaskController::class,'getTaks']);
+Route::get('/cashier',[OrderController::class,'cashierOrders'])->name('order.history');
 

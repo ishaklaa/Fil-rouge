@@ -8,6 +8,8 @@ class Order extends Model
 {
     protected $fillable = ['user_id',
         'discount',
+        'subtotal',
+        'total',
     ];
 
     public function user()

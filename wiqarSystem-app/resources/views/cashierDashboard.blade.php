@@ -59,16 +59,33 @@
 </head>
 <body class="bg-beige-100 min-h-screen">
 
-<!-- ── HEADER ── -->
 <header class="bg-brown-400 px-6 h-14 flex items-center justify-between shadow-lg sticky top-0 z-50">
     <h1 class="font-playfair text-2xl font-bold text-beige-200 tracking-widest">
         WI<span class="text-brown-100">QA</span>AR
     </h1>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3">
         <span class="bg-brown-300 text-beige-200 text-xs font-medium px-4 py-1 rounded-full tracking-widest uppercase">
             Cashier
         </span>
         <span class="text-beige-300 text-sm font-light" id="clock"></span>
+
+        <!-- History -->
+        <a href="{{route('order.history')}}"
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+            History
+        </a>
+
+        <!-- Logout -->
+        <a href="/logout"
+           class="flex items-center gap-1.5 bg-red-900/40 hover:bg-red-700 text-red-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+            Logout
+        </a>
     </div>
 </header>
 

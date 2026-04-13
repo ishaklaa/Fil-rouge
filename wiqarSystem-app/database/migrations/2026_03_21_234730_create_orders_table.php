@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('discount');
+            $table->integer('total');
+            $table->integer('subtotal');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

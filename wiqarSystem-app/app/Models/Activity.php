@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
-    protected $fillable = ['reserved','is_available','price','title',];
+    protected $fillable = ['reserved','is_available','price','title','quantity'];
     public function orders()
     {
         return $this->belongsToMany(Order::class)->withPivot('quantity');

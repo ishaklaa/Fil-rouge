@@ -13,42 +13,58 @@ class OrderController extends Controller
     {
         $errors = [];
         $user = Auth::user();
-        $user = Auth::user();
-
-
         $discount = $request->discount;
         $orders = $request->orders;
+        $subtotal = 0;
+
         foreach ($orders as $order) {
-            $id = $order["id"];
-            $qty = $order["qty"];
-            $activity = Activity::find($id);
+            $activity = Activity::find($order['id']);
             if (!$activity) {
                 $errors[] = "Activity not found";
                 continue;
             }
-            if (!$activity->is_available || $activity->quantity < $qty) {
+            if (!$activity->is_available || $activity->quantity < $order['qty']) {
                 $errors[] = $activity->title . " is not available";
             }
         }
+
         if (!empty($errors)) {
             return response()->json([
                 'message' => 'order has not been created',
                 'errors'  => $errors
             ]);
         }
+
+        foreach ($orders as $order) {
+            $activity = Activity::find($order['id']);
+            $subtotal += $activity->price * $order['qty'];
+            $activity->update([
+                'quantity' => $activity->quantity - $order['qty'],
+            ]);
+        }
+
+        $total = $subtotal - (($subtotal * $discount) / 100);
+
         $cashierOrder = Order::create([
             'user_id'  => $user->id,
             'discount' => $discount,
+            'subtotal' => $subtotal,
+            'total'    => $total,
         ]);
+
         foreach ($orders as $order) {
-            $id  = $order["id"];
-            $qty = $order["qty"];
-            $cashierOrder->activities()->attach($id, ['quantity' => $qty]);
+            $cashierOrder->activities()->attach($order['id'], ['quantity' => $order['qty']]);
         }
+
         return response()->json([
             'message' => 'order has been created',
             'orderId' => $cashierOrder->id
         ]);
+    }
+    public function cashierOrders(){
+        $user = Auth::user();
+        $orders = $user->orders()->get() ?? collect();
+        return view('ordersHistory',compact('orders'));
     }
 
 
