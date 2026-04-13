@@ -46,7 +46,8 @@ class OrderController extends Controller
             $cashierOrder->activities()->attach($id, ['quantity' => $qty]);
         }
         return response()->json([
-            'message' => 'order has been created'
+            'message' => 'order has been created',
+            'orderId' => $cashierOrder->id
         ]);
     }
 

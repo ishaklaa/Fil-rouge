@@ -68,7 +68,7 @@
         <span class="bg-brown-300 text-beige-200 text-xs font-medium px-4 py-1 rounded-full tracking-widest uppercase">
             Cashier
         </span>
-        <span class="text-beige-300 text-sm font-light">14:32 · 30 Mar 2026</span>
+        <span class="text-beige-300 text-sm font-light" id="clock"></span>
     </div>
 </header>
 
@@ -106,27 +106,27 @@
         <div class="flex-1 overflow-y-auto scroll-y p-4 flex flex-col gap-3" id="orderDiv">
 
             <!-- Item -->
-           {{-- <div class="bg-beige-100 rounded-xl px-4 py-3 border border-beige-200 flex items-center gap-3">
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-brown-400 truncate">Archery Session</p>
-                    <p class="text-xs text-brown-200 mt-0.5">240.00 MAD</p>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <button
-                        class="w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all">
-                        −
-                    </button>
-                    <span class="text-sm font-semibold text-brown-400 w-5 text-center">2</span>
-                    <button
-                        class="w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all">
-                        +
-                    </button>
-                </div>
-                <button
-                    class="w-7 h-7 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-400 hover:text-white transition-all text-xs font-bold">
-                    ✕
-                </button>
-            </div>--}}
+            {{-- <div class="bg-beige-100 rounded-xl px-4 py-3 border border-beige-200 flex items-center gap-3">
+                 <div class="flex-1 min-w-0">
+                     <p class="text-sm font-medium text-brown-400 truncate">Archery Session</p>
+                     <p class="text-xs text-brown-200 mt-0.5">240.00 MAD</p>
+                 </div>
+                 <div class="flex items-center gap-1.5">
+                     <button
+                         class="w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all">
+                         −
+                     </button>
+                     <span class="text-sm font-semibold text-brown-400 w-5 text-center">2</span>
+                     <button
+                         class="w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all">
+                         +
+                     </button>
+                 </div>
+                 <button
+                     class="w-7 h-7 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-400 hover:text-white transition-all text-xs font-bold">
+                     ✕
+                 </button>
+             </div>--}}
 
 
             <!-- Empty state (shown when no items) -->
@@ -153,7 +153,7 @@
             <div class="flex justify-between text-sm text-red-400">
                 <span id="discount">Discount 0 %</span>
                 <div>
-                    <span id="discountValue" >0</span>
+                    <span id="discountValue">0</span>
                     <span>SAR</span>
                 </div>
 
@@ -163,19 +163,21 @@
             <div class="flex gap-2">
                 <div
                     class="flex-1 flex items-center bg-beige-100 border border-beige-300 rounded-xl px-3 py-2 gap-2 focus-within:border-brown-200 transition-colors">
-                    <input type="number" name="discount"  min="0" max="100" placeholder="Discount"
-                           class="bg-transparent outline-none text-sm text-brown-400 w-full placeholder-beige-400" id="discountInput">
+                    <input type="number" name="discount" min="0" max="100" placeholder="Discount"
+                           class="bg-transparent outline-none text-sm text-brown-400 w-full placeholder-beige-400"
+                           id="discountInput">
                     <span class="text-beige-400 text-sm font-medium shrink-0">%</span>
                 </div>
                 <button
-                    class="bg-beige-200 border border-beige-300 rounded-xl px-4 text-sm font-medium text-brown-300 hover:bg-brown-200 hover:text-white hover:border-brown-200 transition-all whitespace-nowrap" id="discountModify">
+                    class="bg-beige-200 border border-beige-300 rounded-xl px-4 text-sm font-medium text-brown-300 hover:bg-brown-200 hover:text-white hover:border-brown-200 transition-all whitespace-nowrap"
+                    id="discountModify">
                     Apply
                 </button>
             </div>
 
             <!-- Total -->
             <div class="flex justify-between items-center pt-3 border-t border-dashed border-beige-300">
-                <span class="font-playfair text-xl font-bold text-brown-500" >Total</span>
+                <span class="font-playfair text-xl font-bold text-brown-500">Total</span>
                 <span class="font-playfair text-xl font-bold text-brown-300" id="TotalAmount">0</span>
             </div>
 
@@ -183,7 +185,8 @@
             <div class="flex gap-2 mt-1">
                 <div id="messageContainer"></div>
                 <button
-                    class="flex-1 bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold rounded-xl py-3 flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-95" onclick="checkOut()">
+                    class="flex-1 bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold rounded-xl py-3 flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-95"
+                    onclick="checkOut()">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M9 12l2 2 4-4"/>
                         <circle cx="12" cy="12" r="9"/>
@@ -192,11 +195,11 @@
                 </button>
 
                 <!-- Receipt button — opens modal -->
-                <button onclick="document.getElementById('receipt-modal').classList.remove('hidden')"
+                {{--<button onclick="document.getElementById('receipt-modal').classList.remove('hidden')"
                         class="bg-beige-200 border border-beige-300 rounded-xl px-4 flex items-center justify-center text-brown-300 hover:bg-brown-100 hover:text-white hover:border-brown-100 transition-all text-xl"
                         title="View & Print Receipt">
                     🧾
-                </button>
+                </button>--}}
             </div>
         </div>
     </div>
@@ -211,7 +214,7 @@
 
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm"
-         onclick="document.getElementById('receipt-modal').classList.add('hidden')"></div>
+         onclick='closeModal()'></div>
 
     <!-- Modal Card -->
     <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
@@ -224,34 +227,34 @@
             <p class="font-playfair text-2xl font-bold text-brown-400 tracking-widest">WI<span
                     class="text-brown-100">QA</span>AR</p>
             <p class="text-xs text-brown-200 mt-1 tracking-wider uppercase font-medium">Official Receipt</p>
-            <p class="text-xs text-beige-400 mt-2">30 Mar 2026 · 14:32</p>
+            <p class="text-xs text-beige-400 mt-2" id="clock"></p>
         </div>
 
         <!-- Items -->
-        <div class="px-7 py-4 flex flex-col gap-2.5 border-b border-dashed border-beige-300">
-            <div class="flex justify-between text-sm">
-                <span class="text-brown-300">Archery Session <span class="text-beige-400">×2</span></span>
-                <span class="font-medium text-brown-400">240.00 MAD</span>
-            </div>
-            <div class="flex justify-between text-sm">
-                <span class="text-brown-300">Yoga Class <span class="text-beige-400">×1</span></span>
-                <span class="font-medium text-brown-400">80.00 MAD</span>
-            </div>
+        <div class="px-7 py-4 flex flex-col gap-2.5 border-b border-dashed border-beige-300" id="receipt">
+            {{-- <div class="flex justify-between text-sm">
+                 <span class="text-brown-300">Archery Session <span class="text-beige-400">×2</span></span>
+                 <span class="font-medium text-brown-400">240.00 MAD</span>
+             </div>
+             <div class="flex justify-between text-sm">
+                 <span class="text-brown-300">Yoga Class <span class="text-beige-400">×1</span></span>
+                 <span class="font-medium text-brown-400">80.00 MAD</span>
+             </div>--}}
         </div>
 
         <!-- Totals -->
         <div class="px-7 py-4 flex flex-col gap-2 border-b border-dashed border-beige-300">
             <div class="flex justify-between text-sm text-brown-300">
                 <span>Subtotal</span>
-                <span>320.00 MAD</span>
+                <span id="receiptSubtotal"></span>
             </div>
             <div class="flex justify-between text-sm text-red-400">
-                <span>Discount (10%)</span>
-                <span>−32.00 MAD</span>
+                <span id="receiptDiscount"></span>
+                <span id="receiptDiscountValue"></span>
             </div>
             <div class="flex justify-between items-center pt-2 mt-1 border-t border-beige-300">
                 <span class="font-playfair text-lg font-bold text-brown-500">Total</span>
-                <span class="font-playfair text-lg font-bold text-brown-300">288.00 MAD</span>
+                <span class="font-playfair text-lg font-bold text-brown-300" id="total"></span>
             </div>
         </div>
 
@@ -271,7 +274,7 @@
                 </svg>
                 Print
             </button>
-            <button onclick="document.getElementById('receipt-modal').classList.add('hidden')"
+            <button onclick="closeModal()"
                     class="flex-1 bg-beige-200 border border-beige-300 text-brown-300 font-medium rounded-xl py-2.5 hover:bg-beige-300 transition-all text-sm active:scale-95">
                 Close
             </button>
@@ -279,6 +282,6 @@
     </div>
 </div>
 
-<script src="{{asset('js/script.js')}}" ></script>
+<script src="{{asset('js/script.js')}}"></script>
 </body>
 </html>
