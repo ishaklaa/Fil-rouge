@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Foreach_;
 
 class OrderController extends Controller
 {
@@ -23,7 +25,10 @@ class OrderController extends Controller
                 $errors[] = "Activity not found";
                 continue;
             }
-            if (!$activity->is_available || $activity->quantity < $order['qty']) {
+            $qty = filter_var($order['qty'], FILTER_VALIDATE_INT);
+            if ($qty === false || $qty <= 0) {
+                $errors[] = "Invalid quantity provided.";
+            } elseif (!$activity->is_available || $activity->quantity < $qty) {
                 $errors[] = $activity->title . " is not available";
             }
         }
@@ -31,10 +36,9 @@ class OrderController extends Controller
         if (!empty($errors)) {
             return response()->json([
                 'message' => 'order has not been created',
-                'errors'  => $errors
+                'errors' => $errors
             ]);
         }
-
         foreach ($orders as $order) {
             $activity = Activity::find($order['id']);
             $subtotal += $activity->price * $order['qty'];
@@ -46,10 +50,10 @@ class OrderController extends Controller
         $total = $subtotal - (($subtotal * $discount) / 100);
 
         $cashierOrder = Order::create([
-            'user_id'  => $user->id,
+            'user_id' => $user->id,
             'discount' => $discount,
             'subtotal' => $subtotal,
-            'total'    => $total,
+            'total' => $total,
         ]);
 
         foreach ($orders as $order) {
@@ -61,10 +65,48 @@ class OrderController extends Controller
             'orderId' => $cashierOrder->id
         ]);
     }
-    public function cashierOrders(){
+
+    public function cashierOrders()
+    {
         $user = Auth::user();
         $orders = $user->orders()->get() ?? collect();
-        return view('ordersHistory',compact('orders'));
+        return view('ordersHistory', compact('orders'));
+    }
+
+    public function statistics(Request $request)
+    {
+        $filter = $request->get('filter');
+        $user = Auth::user();
+
+        $query = Activity::withWhereHas('orders', function ($q) use ($user) {
+            $q->whereHas('user', fn($u) => $u->where('branch_id', $user->branch_id));
+        });
+        match ($filter) {
+            'name' => $query->orderBy('title'),
+            'last_day' => $query = Activity::withWhereHas('orders', function ($q) use ($user) {
+                $q->where('tasks.created_at', '>=', now()->subDay());
+                $q->whereHas('user', fn($u) => $u->where('branch_id', $user->branch_id));
+            }),
+            'last_week' => $query = Activity::withWhereHas('orders', function ($q) use ($user) {
+                $q->where('tasks.created_at', '>=', now()->subWeek());
+                $q->whereHas('user', fn($u) => $u->where('branch_id', $user->branch_id));
+            }),
+            'last_month' => $query = Activity::withWhereHas('orders', function ($q) use ($user) {
+                $q->where('tasks.created_at', '>=', now()->subMonth());
+                $q->whereHas('user', fn($u) => $u->where('branch_id', $user->branch_id));
+            }),
+            default => $query->latest(),
+        };
+        $orderQuery = Order::wherehas('user', function ($q) use ($user) {
+            $q->where('branch_id', $user->branch_id);
+        });
+
+        return view('statistic', [
+            'activities' => $query->get(),
+            'totalRevenue' => $orderQuery->sum('total'),
+            'totalActivities' => $query->count(),
+            'totalOrders' => $orderQuery->count(),
+        ]);
     }
 
 

@@ -19,6 +19,6 @@ class Order extends Model
 
     public function activities()
     {
-        return $this->belongsToMany(Activity::class, 'tasks')->withPivot('quantity');
+        return $this->belongsToMany(Activity::class, 'tasks')->withPivot('quantity', 'created_at')->withTimestamps();
     }
 }

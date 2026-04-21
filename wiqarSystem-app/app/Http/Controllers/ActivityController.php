@@ -14,34 +14,48 @@ class ActivityController extends Controller
         return response()->json([
             'activities'=>$activities
         ]);
-
-
+    }
+    public function show(){
+        $activities = Activity::all() ?? collect();
+        return view('activity',compact('activities'));
     }
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'price' => 'required|integer',
-            'is_available' => 'required|boolean',
-            'quantity' => 'required|integer',
+            'title'        => 'required|string|max:255|unique:activities,title',
+            'price'        => 'required|numeric|min:0',
+            'quantity'     => 'required|integer|min:0',
+            'is_available' => 'boolean',
         ]);
-        Activity::created($validated);
+
+        $validated['is_available'] = $request->has('is_available');
+
+        Activity::create($validated);
+
+        return redirect()->back()->with('success', 'Activity created successfully.');
     }
-    public function update(Request $request ,$id)
+    public function update(Request $request, $id)
     {
-        $activity = Activity::where('id',$id)->first();
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'price' => 'required|integer',
-            'is_available' => 'required|boolean',
+            'title'        => 'required|string|max:255|unique:activities,title,' . $id,
+            'description'  => 'nullable|string|max:1000',
+            'price'        => 'required|numeric|min:0',
+            'quantity'     => 'required|integer|min:0',
+            'is_available' => 'boolean',
         ]);
+
+        $validated['is_available'] = $request->has('is_available');
+
+        $activity = Activity::findOrFail($id);
         $activity->update($validated);
 
+        return redirect()->back()->with('success', 'Activity updated successfully.');
     }
     public function destroy($id)
     {
         $activity = Activity::findOrFail($id);
         $activity->delete();
+        return redirect()->back();
     }
 
 }

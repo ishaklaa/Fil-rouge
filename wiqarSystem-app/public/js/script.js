@@ -315,7 +315,7 @@ function discountModify() {
 
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
-    toast.className = `fixed bottom-5 right-5 px-4 py-3 rounded-xl text-white text-sm font-medium shadow-lg transition-all ${
+    toast.className = `fixed bottom-5 right-5 px-4 py-3 rounded-xl z-[100] text-white text-sm font-medium shadow-lg transition-all ${
         type === 'success' ? 'bg-green-500' : 'bg-red-500'
     }`;
     toast.textContent = message;
@@ -431,6 +431,7 @@ function closeModal() {
     receiptDiscountValue.textContent =discountAmount;
     total.textContent = 0 + " SAR";
     document.getElementById('receipt-modal').classList.add('hidden');
+    window.location.reload();
 
 }
 
@@ -483,6 +484,7 @@ function checkOut() {
                 removeAfterCheckout();
                 activitiesDiv.textContent = '';
                 showReceipt(data.orderId);
+
 
             }
         })

@@ -77,7 +77,27 @@
             </svg>
             History
         </a>
+        <a href="{{ route('cashier.statistics') }}"
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            Statistics
+        </a>
 
+        <!-- Branches -->
+        <a href="{{ route('branches.index') }}"
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Branches
+        </a>
+
+        <a href="{{ route('activities.index') }}"
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7Z"/>
+            </svg>
+            Activities
+        </a>
         <!-- Logout -->
         <a href="/logout"
            class="flex items-center gap-1.5 bg-red-900/40 hover:bg-red-700 text-red-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
@@ -227,7 +247,7 @@
 <!-- ══════════════════════════════════
      RECEIPT MODAL
 ══════════════════════════════════ -->
-<div id="receipt-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
+<div id="receipt-modal" class="hidden fixed inset-0 z-[50] flex items-center justify-center">
 
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm"

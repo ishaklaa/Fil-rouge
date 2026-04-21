@@ -95,13 +95,16 @@
             Orders History
         </span>
 
-        <!-- Dashboard -->
         <a href="{{ route('cashier.dashboard') }}"
-           class="text-beige-300 hover:text-beige-100 text-xs font-medium transition-all underline underline-offset-2">
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
             Dashboard
         </a>
 
-        <!-- Logout -->
+        <a href="{{ route('cashier.statistics') }}"
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            Statistics
+        </a>
+
         <a href="/logout"
            class="text-red-300 hover:text-red-100 text-xs font-medium transition-all underline underline-offset-2">
             Logout
@@ -177,14 +180,7 @@
 
             <!-- Items -->
             <div class="px-7 py-4 flex flex-col gap-2.5 border-b border-dashed border-beige-300" id="receipt">
-                {{-- <div class="flex justify-between text-sm">
-                     <span class="text-brown-300">Archery Session <span class="text-beige-400">×2</span></span>
-                     <span class="font-medium text-brown-400">240.00 MAD</span>
-                 </div>
-                 <div class="flex justify-between text-sm">
-                     <span class="text-brown-300">Yoga Class <span class="text-beige-400">×1</span></span>
-                     <span class="font-medium text-brown-400">80.00 MAD</span>
-                 </div>--}}
+
             </div>
 
             <!-- Totals -->
@@ -227,8 +223,8 @@
         </div>
     </div>
 </div>
-
 <script src="{{asset('js/history.js')}}"></script>
+
 
 </body>
 </html>

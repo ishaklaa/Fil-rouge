@@ -27,10 +27,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Branch::class);
     }
-    public function businesses()
-    {
-     return $this->hasMany(Business::class);
-    }
+
     public function shifts(){
         return $this->hasMany(Shift::class);
     }

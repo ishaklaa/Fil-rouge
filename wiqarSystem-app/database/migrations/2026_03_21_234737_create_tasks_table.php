@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('activity_id')->constrained();
-            $table->foreignId('order_id')->constrained();
+            $table->foreignId('activity_id')->constrained()->onDelete('set null');
+            $table->foreignId('order_id')->constrained()->onDelete('set null');
             $table->integer('quantity');
             $table->timestamps();
         });
