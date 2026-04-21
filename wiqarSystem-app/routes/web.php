@@ -7,6 +7,7 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,3 +33,7 @@ Route::get('/actvities/show',[ActivityController::class,'show'])->name('activiti
 Route::get('/admin/branches',[BranchController::class,'index'])->name('branches.index');
 Route::post('/admin/branches/store',[BranchController::class,'store'])->name('branches.store');
 Route::put('/admin/branch/update/{id}',[BranchController::class,'update'])->name('branches.update');
+Route::get('/admin/profiles',[UserController::class,'index'])->name('profiles.index');
+Route::post('/admin/Profiles/store',[UserController::class,'store'])->name('profiles.store');
+Route::put('/admin/profiles/{id}', [UserController::class, 'update'])->name('profiles.update');
+

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Shift;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,15 +26,27 @@ class LoginController extends Controller
         }
         $request->session()->regenerate();
         if (Auth::user()->role_id == 3) {
+            $user = Auth::user();
+            Shift::create([
+                'user_id' => $user->id,
+            ]);
             return redirect()->route('cashier.dashboard');
+
         }
         return redirect('/');
     }
 
     public function logout()
     {
+        if (Auth::user()->role_id == 3) {
+
+            $shift = Auth::user()->shifts()->latest()->first();
+            if ($shift) {
+                $shift->update(['ends_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
+            }
+        }
         Auth::logout();
-        return view('loginPage');
+        return redirect()->route('login.show');
 
     }
 }

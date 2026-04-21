@@ -16,7 +16,8 @@ class BranchController extends Controller
             'name' => 'required|string|max:255|unique:branches,name',
         ]);
         Branch::create($validated);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Branch created successfully.');
+
     }
     public function update(Request $request,$id){
         $branch = Branch::find($id);

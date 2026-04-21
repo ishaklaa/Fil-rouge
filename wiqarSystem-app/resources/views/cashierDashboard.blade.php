@@ -98,6 +98,15 @@
             </svg>
             Activities
         </a>
+        <!-- Profiles -->
+        <a href="{{ route('profiles.index') }}"
+           class="flex items-center gap-1.5 bg-brown-300 hover:bg-brown-200 text-beige-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Profiles
+        </a>
         <!-- Logout -->
         <a href="/logout"
            class="flex items-center gap-1.5 bg-red-900/40 hover:bg-red-700 text-red-200 text-xs font-medium px-3 py-1.5 rounded-xl transition-all">
