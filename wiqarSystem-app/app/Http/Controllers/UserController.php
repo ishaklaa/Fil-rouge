@@ -47,15 +47,16 @@ class UserController extends Controller
             'password'  => 'nullable|string|min:6',
             'role_id'   => 'required|exists:roles,id',
             'branch_id' => 'required|exists:branches,id',
-        ]);
 
+        ]);
+        $validated['status'] = $request->input('status');
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
         }
 
-        $validated['status'] = $request->has('status') ? 'active' : 'blocked';
+
 
         $user->update($validated);
 

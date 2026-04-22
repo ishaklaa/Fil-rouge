@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,4 +37,6 @@ Route::put('/admin/branch/update/{id}',[BranchController::class,'update'])->name
 Route::get('/admin/profiles',[UserController::class,'index'])->name('profiles.index');
 Route::post('/admin/Profiles/store',[UserController::class,'store'])->name('profiles.store');
 Route::put('/admin/profiles/{id}', [UserController::class, 'update'])->name('profiles.update');
+// web.php
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 

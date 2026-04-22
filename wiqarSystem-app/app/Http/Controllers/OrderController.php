@@ -69,7 +69,24 @@ class OrderController extends Controller
     public function cashierOrders()
     {
         $user = Auth::user();
+
+        if (Auth::user()->role_id == 1 ){
+            $orders = Order::all();
+            return view('ordersHistory', compact('orders'));
+
+
+        }elseif (Auth::user()->role_id == 2){
+            $user = Auth::user();
+
+            $orders = Order::wherehas('user',function ($q) use ($user){
+                $q->where('users.branch_id',$user->branch_id);
+            })->get();
+            return view('ordersHistory', compact('orders'));
+
+        }
+
         $orders = $user->orders()->get() ?? collect();
+
         return view('ordersHistory', compact('orders'));
     }
 
