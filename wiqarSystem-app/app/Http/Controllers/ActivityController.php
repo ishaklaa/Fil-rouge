@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
@@ -16,8 +17,9 @@ class ActivityController extends Controller
         ]);
     }
     public function show(){
+        $user = Auth::user();
         $activities = Activity::all() ?? collect();
-        return view('activity',compact('activities'));
+        return view('activity',compact('activities', 'user'));
     }
     public function store(Request $request)
     {

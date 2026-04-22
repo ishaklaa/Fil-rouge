@@ -70,24 +70,24 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        if (Auth::user()->role_id == 1 ){
+        if (Auth::user()->role_id == 1) {
             $orders = Order::all();
-            return view('ordersHistory', compact('orders'));
+            return view('ordersHistory', compact('orders', 'user'));
 
 
-        }elseif (Auth::user()->role_id == 2){
-            $user = Auth::user();
+        } elseif (Auth::user()->role_id == 2) {
 
-            $orders = Order::wherehas('user',function ($q) use ($user){
-                $q->where('users.branch_id',$user->branch_id);
+
+            $orders = Order::wherehas('user', function ($q) use ($user) {
+                $q->where('users.branch_id', $user->branch_id);
             })->get();
-            return view('ordersHistory', compact('orders'));
+            return view('ordersHistory', compact('orders', 'user'));
 
         }
 
         $orders = $user->orders()->get() ?? collect();
 
-        return view('ordersHistory', compact('orders'));
+        return view('ordersHistory', compact('orders', 'user'));
     }
 
     public function statistics(Request $request)
@@ -119,6 +119,7 @@ class OrderController extends Controller
         });
 
         return view('statistic', [
+            'user' => $user,
             'activities' => $query->get(),
             'totalRevenue' => $orderQuery->sum('total'),
             'totalActivities' => $query->count(),

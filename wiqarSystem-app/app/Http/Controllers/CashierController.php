@@ -11,8 +11,9 @@ class CashierController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
         $activities = Activity::all() ?? collect();
-            return view('cashierDashboard', compact('activities'));
+            return view('cashierDashboard', compact('activities','user'));
         }
 
 }

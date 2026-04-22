@@ -6,17 +6,19 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
         $users    = User::with(['role', 'branch', 'shifts'])->get();
         $roles    = Role::all();
         $branches = Branch::all();
 
-        return view('profile', compact('users', 'roles', 'branches'));
+        return view('profile', compact('users', 'roles', 'branches','user'));
     }
 
     public function store(Request $request)
