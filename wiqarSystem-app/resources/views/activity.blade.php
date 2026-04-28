@@ -90,25 +90,60 @@
             border-color: #a0724a;
             box-shadow: 0 0 0 3px rgba(160, 114, 74, 0.15);
         }
+
+
+        #sidebar {
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 767px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 40;
+                transform: translateX(-100%);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body class="bg-beige-100 min-h-screen">
 
-<!-- ── HEADER ── -->
-<div class="flex h-screen overflow-hidden">
 
-    <aside class="w-56 shrink-0 bg-brown-400 flex flex-col h-full shadow-2xl">
+<div class="md:hidden flex items-center justify-between bg-brown-400 px-4 py-3 sticky top-0 z-30">
+    <h1 class="font-playfair text-xl font-bold text-beige-200 tracking-widest">
+        WI<span class="text-brown-100">QA</span>AR
+    </h1>
+    <button
+        onclick="document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('hidden')"
+        class="text-beige-200 p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    </button>
+</div>
+
+<div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/40 z-30 md:hidden"
+     onclick="document.getElementById('sidebar').classList.remove('open'); this.classList.add('hidden')"></div>
+
+<div class="flex md:h-screen md:overflow-hidden">
+
+    <aside id="sidebar" class="w-56 shrink-0 bg-brown-400 flex flex-col h-full shadow-2xl">
         <div class="px-5 py-5 border-b border-brown-300/40">
-            <h1 class="font-playfair text-2xl font-bold text-beige-200 tracking-widest">
+            <h1 class="font-playfair text-2xl font-bold text-beige-200 tracking-widest hidden md:block">
                 WI<span class="text-brown-100">QA</span>AR
             </h1>
             <p class="text-beige-400 text-xs mt-0.5 font-light tracking-widest uppercase">{{ ucfirst(Auth::user()->role->name ?? '') }}
                 Panel</p>
         </div>
         <nav class="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto scroll-y">
-                <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mb-1">Main</p>
-            @if($user->role_id == 1|| $user->role_id == 2)
-
+            <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mb-1">Main</p>
+            @if($user->role_id == 1 || $user->role_id == 2)
                 <a href="{{ route('admin.dashboard') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
@@ -122,8 +157,7 @@
                 </a>
             @endif
             @if($user->role_id == 1)
-                <p class="text-beige-400 text-[10px] font-medium tracking-widests uppercase px-3 mt-3 mb-1">Manage</p>
-
+                <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mt-3 mb-1">Manage</p>
                 <a href="{{ route('profiles.index') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
@@ -134,7 +168,6 @@
                     </svg>
                     Profiles
                 </a>
-
                 <a href="{{ route('branches.index') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
@@ -144,7 +177,6 @@
                     </svg>
                     Branches
                 </a>
-
                 <a href="{{ route('activities.index') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
@@ -154,7 +186,6 @@
                     Activities
                 </a>
             @endif
-
             <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mt-3 mb-1">Reports</p>
             <a href="{{ route('order.history') }}"
                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
@@ -163,7 +194,7 @@
                 </svg>
                 History
             </a>
-            @if($user->role_id == 1|| $user->role_id == 2)
+            @if($user->role_id == 1 || $user->role_id == 2)
                 <a href="{{ route('cashier.statistics') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
@@ -174,7 +205,6 @@
                     Statistics
                 </a>
             @endif
-
         </nav>
         <div class="px-3 py-4 border-t border-brown-300/40 flex flex-col gap-2">
             <div class="flex items-center gap-3 px-3 py-2">
@@ -198,21 +228,16 @@
     </aside>
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <div class="flex gap-5 p-5 h-full">
+        <div class="flex flex-col lg:flex-row gap-5 p-4 md:p-5 h-full overflow-y-auto lg:overflow-hidden">
 
-            <!-- LEFT — CREATE FORM -->
-            <div class="w-[340px] shrink-0 flex flex-col gap-4">
+            <div class="w-full lg:w-[340px] lg:shrink-0 flex flex-col gap-4">
 
                 <div
                     class="bg-white rounded-2xl border border-beige-200 shadow-xl overflow-hidden flex flex-col min-h-0">
-
-                    <!-- Fixed header -->
                     <div class="bg-brown-400 px-5 py-4 shrink-0">
                         <p class="font-playfair text-lg text-beige-200 font-semibold">New Activity</p>
                         <p class="text-beige-400 text-xs mt-0.5 font-light">Fill in the details below</p>
                     </div>
-
-                    <!-- Scrollable area -->
                     <div class="p-5 overflow-y-auto scroll-y">
                         <form action="{{ route('activities.store') }}" method="POST" class="flex flex-col gap-4">
                             @csrf
@@ -242,7 +267,6 @@
                                     <p class="text-red-400 text-xs">{{ $message }}</p>
                                     @enderror
                                 </div>
-
                                 <div class="flex flex-col gap-1.5">
                                     <label
                                         class="text-xs font-medium text-brown-300 tracking-wide uppercase">Quantity</label>
@@ -269,7 +293,6 @@
                                 </label>
                             </div>
 
-                            <!-- ✅ Button is INSIDE the form, INSIDE the scrollable div -->
                             <button type="submit"
                                     class="w-full bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold rounded-xl py-3 flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-95">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -278,13 +301,10 @@
                                 </svg>
                                 Create Activity
                             </button>
-
                         </form>
                     </div>
-
                 </div>
 
-                <!-- Stats -->
                 <div class="bg-white rounded-2xl border border-beige-200 shadow-sm px-5 py-4 flex flex-col gap-3">
                     <p class="text-xs font-medium text-brown-300 tracking-widest uppercase">Overview</p>
                     <div class="grid grid-cols-3 gap-3 text-center">
@@ -305,8 +325,7 @@
 
             </div>
 
-            <!-- RIGHT — ACTIVITIES GRID -->
-            <div class="flex flex-col gap-4 flex-1 overflow-hidden">
+            <div class="flex flex-col gap-4 flex-1 lg:overflow-hidden">
 
                 <h2 class="font-playfair text-xl font-semibold text-brown-400 shrink-0">All Activities</h2>
 
@@ -318,7 +337,7 @@
                 @endif
 
                 <div
-                    class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 overflow-y-auto scroll-y pr-1 flex-1 content-start">
+                    class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 lg:overflow-y-auto scroll-y lg:pr-1 lg:flex-1 content-start pb-4">
 
                     @forelse($activities as $activity)
                         <div class="activity-card bg-white rounded-2xl border border-beige-200 p-4 flex flex-col gap-3">
@@ -326,13 +345,12 @@
                             <div class="flex items-start justify-between gap-2">
                                 <p class="font-playfair text-base font-semibold text-brown-400 leading-snug">{{ $activity->title }}</p>
                                 <span class="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full
-                            {{ $activity->is_available && $activity->quantity > 0
-                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                                : 'bg-beige-200 text-beige-400 border border-beige-300' }}">
-                            {{ $activity->is_available && $activity->quantity > 0 ? 'Available' : 'Unavailable' }}
-                        </span>
+                                    {{ $activity->is_available && $activity->quantity > 0
+                                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                                        : 'bg-beige-200 text-beige-400 border border-beige-300' }}">
+                                    {{ $activity->is_available && $activity->quantity > 0 ? 'Available' : 'Unavailable' }}
+                                </span>
                             </div>
-
 
                             <div class="border-t border-dashed border-beige-200"></div>
 
@@ -386,9 +404,6 @@
         </div>
 
 
-        <!-- ══════════════════════════════════
-             EDIT MODAL
-        ══════════════════════════════════ -->
         <div id="edit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
             <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm" onclick="closeEditModal()"></div>
 
@@ -416,7 +431,6 @@
                             <input type="text" name="title" id="edit_title"
                                    class="wq-input w-full bg-beige-50 border border-beige-300 rounded-xl px-4 py-2.5 text-sm text-brown-400 transition-all"/>
                         </div>
-
 
                         <div class="grid grid-cols-2 gap-3">
                             <div class="flex flex-col gap-1.5">
@@ -471,29 +485,23 @@
             </div>
         </div>
 
+    </div>
+</div>
 
-        <script>
-            function openEditModal(id, title, description, price, quantity, isAvailable) {
-                document.getElementById('edit_title').value = title;
-                document.getElementById('edit_price').value = price;
-                document.getElementById('edit_quantity').value = quantity;
-                document.getElementById('edit_available').checked = isAvailable;
-                document.getElementById('edit-modal').classList.remove('hidden');
-                document.getElementById('edit-form').action = "{{ route('activities.update', '__id__') }}".replace('__id__', id);
-            }
+<script>
+    function openEditModal(id, title, description, price, quantity, isAvailable) {
+        document.getElementById('edit_title').value = title;
+        document.getElementById('edit_price').value = price;
+        document.getElementById('edit_quantity').value = quantity;
+        document.getElementById('edit_available').checked = isAvailable;
+        document.getElementById('edit-modal').classList.remove('hidden');
+        document.getElementById('edit-form').action = "{{ route('activities.update', '__id__') }}".replace('__id__', id);
+    }
 
-            function closeEditModal() {
-                document.getElementById('edit-modal').classList.add('hidden');
-            }
-
-            /*   function openDeleteModal(id, title) {
-                   document.getElementById('delete_title').textContent = title;
-                   document.getElementById('delete-modal').classList.remove('hidden');
-
-
-               }
-               function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); }*/
-        </script>
+    function closeEditModal() {
+        document.getElementById('edit-modal').classList.add('hidden');
+    }
+</script>
 
 </body>
 </html>

@@ -117,10 +117,8 @@
 </head>
 <body class="bg-beige-100 min-h-screen overflow-hidden relative flex flex-col">
 
-{{-- Noise texture --}}
 <div class="noise"></div>
 
-{{-- Background radial blobs --}}
 <div class="fixed inset-0 z-0 pointer-events-none">
     <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full"
          style="background: radial-gradient(circle, rgba(196,154,108,0.18) 0%, transparent 70%)"></div>
@@ -130,7 +128,6 @@
          style="background: radial-gradient(circle, rgba(245,233,212,0.4) 0%, transparent 65%)"></div>
 </div>
 
-{{-- Floating decorative rings --}}
 <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
     <div class="deco-ring absolute w-[500px] h-[500px] -top-24 -right-24 animate-spin-slow opacity-40"></div>
     <div class="deco-ring absolute w-[300px] h-[300px] bottom-10 left-10 animate-spin-slow opacity-30"
@@ -138,7 +135,6 @@
     <div class="deco-ring absolute w-[180px] h-[180px] top-1/3 left-16 opacity-20"></div>
 </div>
 
-{{-- Floating icons --}}
 <div class="fixed inset-0 z-0 pointer-events-none">
     <span class="absolute top-[12%] left-[8%]  text-4xl opacity-20 animate-float">🎾</span>
     <span class="absolute top-[20%] right-[10%] text-3xl opacity-15 animate-float-2">🏊</span>
@@ -148,18 +144,15 @@
     <span class="absolute top-[45%] right-[5%]  text-2xl opacity-20 animate-float-3">🏹</span>
 </div>
 
-{{-- ── HEADER ── --}}
 <header class="relative z-10 flex items-center justify-between px-8 py-5 opacity-0-init animate-fade-in">
     <div class="font-playfair text-2xl font-bold text-brown-400 tracking-widest">
-        MO<span class="text-brown-100">BY</span>Z
+        WI<span class="text-brown-100">QA</span>AR
     </div>
 
 </header>
 
-{{-- ── HERO ── --}}
 <main class="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 py-10">
 
-    {{-- Badge --}}
     <div class="opacity-0-init animate-fade-up mb-6">
             <span class="glass border border-beige-300 text-brown-300 text-xs font-medium
                          px-5 py-2 rounded-full tracking-widest uppercase shadow-sm">
@@ -167,27 +160,23 @@
             </span>
     </div>
 
-    {{-- Main heading --}}
     <div class="opacity-0-init animate-fade-up-2">
         <h1 class="font-playfair font-bold text-brown-500 leading-tight mb-4"
             style="font-size: clamp(3rem, 8vw, 7rem); line-height: 1.08;">
             Welcome to<br>
-            <span class="text-brown-300 italic">Mobyz</span>
+            <span class="text-brown-300 italic">Wiqaar</span>
         </h1>
     </div>
 
-    {{-- Subtitle --}}
     <div class="opacity-0-init animate-fade-up-3">
         <p class="text-brown-200 text-lg font-light max-w-xl mx-auto mb-10 leading-relaxed">
             Discover a world of curated activities, wellness, and leisure experiences — all in one place.
         </p>
     </div>
 
-    {{-- CTA --}}
     <div class="opacity-0-init animate-fade-up-4 flex flex-col sm:flex-row items-center gap-4">
 
-        {{-- Login Button --}}
-        <a href="{{ route('login.show') }}"
+        <a href="{{  route('login.show') }}"
            class="btn-login bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold
                       px-10 py-4 rounded-2xl text-lg tracking-wide shadow-xl transition-all duration-300
                       hover:-translate-y-1 hover:shadow-2xl flex items-center gap-3 group">
@@ -203,7 +192,6 @@
 
     </div>
 
-    {{-- Divider with decorative element --}}
     <div class="opacity-0-init animate-fade-up-4 flex items-center gap-4 mt-16 mb-10">
         <div class="h-px w-20 bg-gradient-to-r from-transparent to-beige-300"></div>
         <span class="text-beige-400 text-lg">✦</span>
@@ -213,7 +201,6 @@
 
 </main>
 
-{{-- ── FOOTER ── --}}
 <footer class="relative z-10 text-center py-5 text-beige-400 text-xs font-light tracking-wide">
     © {{ date('Y') }} Mobyz &nbsp;·&nbsp; All rights reserved
 </footer>

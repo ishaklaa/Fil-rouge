@@ -6,7 +6,9 @@
     <title>Mobyz — Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -35,11 +37,14 @@
         }
     </script>
     <style>
-        body { font-family: 'DM Sans', sans-serif; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+
         .input-focus:focus {
             outline: none;
             border-color: #7d5230;
-            box-shadow: 0 0 0 3px rgba(125,82,48,0.1);
+            box-shadow: 0 0 0 3px rgba(125, 82, 48, 0.1);
         }
     </style>
 </head>
@@ -47,21 +52,23 @@
 
 <div class="bg-white rounded-2xl shadow-xl border border-beige-200 w-full max-w-md p-8">
 
-    {{-- Logo --}}
     <div class="text-center mb-8">
         <h1 class="font-playfair text-3xl font-bold text-brown-400 tracking-widest">
-            MO<span class="text-brown-100">BY</span>Z
+            WI<span class="text-brown-100">QA</span>R
         </h1>
         <p class="text-brown-200 text-sm mt-2">Sign in to your account</p>
     </div>
 
 
-
-    {{-- Form --}}
+    @if (session('error'))
+        <div
+            style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; border: 1px solid #f87171;">
+            {{ session('error') }}
+        </div>
+    @endif
     <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-5">
         @csrf
 
-        {{-- Email --}}
         <div class="flex flex-col gap-1.5">
             <label for="email" class="text-sm font-medium text-brown-400">Email</label>
             <input
@@ -78,7 +85,6 @@
             @enderror
         </div>
 
-        {{-- Password --}}
         <div class="flex flex-col gap-1.5">
             <label for="password" class="text-sm font-medium text-brown-400">Password</label>
             <input
@@ -92,7 +98,7 @@
 
         </div>
 
-        {{-- Submit --}}
+
         <button type="submit"
                 class="mt-2 bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold
                            rounded-xl py-3 text-base tracking-wide transition-all hover:-translate-y-0.5
@@ -101,7 +107,6 @@
         </button>
     </form>
 
-    {{-- Back link --}}
 
 
 </div>

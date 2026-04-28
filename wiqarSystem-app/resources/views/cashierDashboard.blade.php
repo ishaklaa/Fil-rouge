@@ -38,45 +38,86 @@
         }
     </script>
     <style>
-        body {
-            font-family: 'DM Sans', sans-serif;
+        body { font-family: 'DM Sans', sans-serif; }
+
+        .scroll-y::-webkit-scrollbar { width: 4px; }
+        .scroll-y::-webkit-scrollbar-track { background: #f5e9d4; border-radius: 10px; }
+        .scroll-y::-webkit-scrollbar-thumb { background: #d4b896; border-radius: 10px; }
+
+
+        #sidebar { transition: transform 0.3s ease; }
+        @media (max-width: 767px) {
+            #sidebar {
+                position: fixed;
+                top: 0; left: 0;
+                height: 100%;
+                z-index: 40;
+                transform: translateX(-100%);
+            }
+            #sidebar.open { transform: translateX(0); }
         }
 
-        .scroll-y::-webkit-scrollbar {
-            width: 4px;
-        }
 
-        .scroll-y::-webkit-scrollbar-track {
-            background: #f5e9d4;
-            border-radius: 10px;
+        #order-panel {
+            transition: transform 0.3s ease;
         }
-
-        .scroll-y::-webkit-scrollbar-thumb {
-            background: #d4b896;
-            border-radius: 10px;
+        @media (max-width: 1023px) {
+            #order-panel {
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                z-index: 35;
+                border-radius: 1.5rem 1.5rem 0 0;
+                max-height: 85vh;
+                transform: translateY(100%);
+            }
+            #order-panel.open {
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body class="bg-beige-100 min-h-screen">
 
-<div class="flex h-screen overflow-hidden">
+<div class="md:hidden flex items-center justify-between bg-brown-400 px-4 py-3 sticky top-0 z-30">
+    <button onclick="document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('hidden')"
+            class="text-beige-200 p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    </button>
+    <h1 class="font-playfair text-xl font-bold text-beige-200 tracking-widest">
+        WI<span class="text-brown-100">QA</span>AR
+    </h1>
+    <button onclick="document.getElementById('order-panel').classList.toggle('open'); document.getElementById('order-overlay').classList.toggle('hidden')"
+            class="text-beige-200 p-1 relative">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+            <path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+    </button>
+</div>
 
-    <aside class="w-56 shrink-0 bg-brown-400 flex flex-col h-full shadow-2xl">
+<div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/40 z-30 md:hidden"
+     onclick="document.getElementById('sidebar').classList.remove('open'); this.classList.add('hidden')"></div>
+
+<div id="order-overlay" class="hidden fixed inset-0 bg-black/40 z-30 lg:hidden"
+     onclick="document.getElementById('order-panel').classList.remove('open'); this.classList.add('hidden')"></div>
+
+<div class="flex md:h-screen md:overflow-hidden">
+
+    <aside id="sidebar" class="w-56 shrink-0 bg-brown-400 flex flex-col h-full shadow-2xl">
         <div class="px-5 py-5 border-b border-brown-300/40">
-            <h1 class="font-playfair text-2xl font-bold text-beige-200 tracking-widest">
+            <h1 class="font-playfair text-2xl font-bold text-beige-200 tracking-widest hidden md:block">
                 WI<span class="text-brown-100">QA</span>AR
             </h1>
-            <p class="text-beige-400 text-xs mt-0.5 font-light tracking-widest uppercase">{{ ucfirst(Auth::user()->role->name ?? '') }}
-                Panel</p>
+            <p class="text-beige-400 text-xs mt-0.5 font-light tracking-widest uppercase">{{ ucfirst(Auth::user()->role->name ?? '') }} Panel</p>
         </div>
         <nav class="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto scroll-y">
             <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mb-1">Main</p>
-            @if($user->role_id == 1|| $user->role_id == 2)
-
+            @if($user->role_id == 1 || $user->role_id == 2)
                 <a href="{{ route('admin.dashboard') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="3" y="3" width="7" height="7"/>
                         <rect x="14" y="3" width="7" height="7"/>
                         <rect x="14" y="14" width="7" height="7"/>
@@ -88,47 +129,39 @@
             @if($user->role_id == 3)
                 <a href="{{ route('cashier.dashboard') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     </svg>
                     Cashier
                 </a>
             @endif
             @if($user->role_id == 1)
-                <p class="text-beige-400 text-[10px] font-medium tracking-widests uppercase px-3 mt-3 mb-1">Manage</p>
-
+                <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mt-3 mb-1">Manage</p>
                 <a href="{{ route('profiles.index') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                         <circle cx="9" cy="7" r="4"/>
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                     Profiles
                 </a>
-
                 <a href="{{ route('branches.index') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                         <polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
                     Branches
                 </a>
-
                 <a href="{{ route('activities.index') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M13 10V3L4 14h7v7l9-11h-7Z"/>
                     </svg>
                     Activities
                 </a>
             @endif
-
             <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mt-3 mb-1">Reports</p>
             <a href="{{ route('order.history') }}"
                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
@@ -137,24 +170,21 @@
                 </svg>
                 History
             </a>
-            @if($user->role_id == 1|| $user->role_id == 2)
+            @if($user->role_id == 1 || $user->role_id == 2)
                 <a href="{{ route('cashier.statistics') }}"
                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-beige-200 hover:bg-brown-300/50 text-sm font-medium">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M3 3v18h18"/>
                         <path d="M18 17V9M13 17V5M8 17v-3"/>
                     </svg>
                     Statistics
                 </a>
             @endif
-
         </nav>
         <div class="px-3 py-4 border-t border-brown-300/40 flex flex-col gap-2">
             <div class="flex items-center gap-3 px-3 py-2">
                 <div class="w-8 h-8 rounded-lg bg-brown-300 flex items-center justify-center shrink-0">
-                    <span
-                        class="font-playfair text-sm font-bold text-beige-200">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                    <span class="font-playfair text-sm font-bold text-beige-200">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-beige-200 text-sm font-medium truncate">{{ Auth::user()->name }}</p>
@@ -172,82 +202,38 @@
     </aside>
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <div class="flex gap-5 p-5 h-full">
+        <div class="flex gap-5 p-4 md:p-5 h-full overflow-hidden">
 
-            <!-- LEFT — ACTIVITIES -->
             <div class="flex flex-col gap-4 flex-1 overflow-hidden">
 
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between shrink-0">
                     <h2 class="font-playfair text-xl font-semibold text-brown-400">Available Activities</h2>
                 </div>
 
-                <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 overflow-y-auto scroll-y pr-1 flex-1"
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 overflow-y-auto scroll-y pr-1 flex-1"
                      id="activitiesDiv">
-
-                    <!-- Card — Available -->
-
-
                 </div>
             </div>
 
-            <!-- RIGHT — ORDER PANEL -->
-            <div
-                class="w-[400px] bg-white rounded-2xl border border-beige-200 shadow-xl flex flex-col overflow-hidden shrink-0">
+            <div id="order-panel"
+                 class="w-full lg:w-[400px] bg-white lg:rounded-2xl border border-beige-200 shadow-xl flex flex-col lg:overflow-hidden lg:shrink-0">
 
-                <!-- Order Header -->
-                <div class="bg-brown-400 px-5 py-4 flex items-center justify-between">
+                <div class="bg-brown-400 px-5 py-4 flex items-center justify-between lg:rounded-t-2xl">
+                    <div class="lg:hidden absolute left-1/2 -translate-x-1/2 top-2 w-10 h-1 bg-beige-300/60 rounded-full"></div>
                     <span class="font-playfair text-lg text-beige-200 font-semibold">Current Order</span>
-                    <span
-                        class="bg-brown-100 text-white text-xs font-bold px-3 py-1 rounded-full min-w-[28px] text-center">3</span>
+                    <span class="bg-brown-100 text-white text-xs font-bold px-3 py-1 rounded-full min-w-[28px] text-center">3</span>
                 </div>
 
-                <!-- Order Items -->
                 <div class="flex-1 overflow-y-auto scroll-y p-4 flex flex-col gap-3" id="orderDiv">
-
-                    <!-- Item -->
-                    {{-- <div class="bg-beige-100 rounded-xl px-4 py-3 border border-beige-200 flex items-center gap-3">
-                         <div class="flex-1 min-w-0">
-                             <p class="text-sm font-medium text-brown-400 truncate">Archery Session</p>
-                             <p class="text-xs text-brown-200 mt-0.5">240.00 MAD</p>
-                         </div>
-                         <div class="flex items-center gap-1.5">
-                             <button
-                                 class="w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all">
-                                 −
-                             </button>
-                             <span class="text-sm font-semibold text-brown-400 w-5 text-center">2</span>
-                             <button
-                                 class="w-7 h-7 rounded-lg border border-beige-300 bg-white text-brown-300 font-bold flex items-center justify-center hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all">
-                                 +
-                             </button>
-                         </div>
-                         <button
-                             class="w-7 h-7 rounded-lg bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-400 hover:text-white transition-all text-xs font-bold">
-                             ✕
-                         </button>
-                     </div>--}}
-
-
-                    <!-- Empty state (shown when no items) -->
-                    <!--
-                    <div class="flex flex-col items-center justify-center text-beige-400 gap-3 py-16 flex-1">
-                        <span class="text-5xl opacity-40">🛒</span>
-                        <p class="text-sm text-center">No activities added yet.<br>Select from the left to begin.</p>
-                    </div>
-                    -->
-
                 </div>
 
-                <!-- Order Footer -->
                 <div class="border-t border-beige-200 px-5 py-4 flex flex-col gap-3">
-
                     <div class="flex justify-between text-sm text-brown-300">
                         <span>Subtotal</span>
                         <div>
                             <span id="subTotal">0</span>
                             <span>SAR</span>
                         </div>
-
                     </div>
                     <div class="flex justify-between text-sm text-red-400">
                         <span id="discount">Discount 0 %</span>
@@ -255,13 +241,10 @@
                             <span id="discountValue">0</span>
                             <span>SAR</span>
                         </div>
-
                     </div>
 
-                    <!-- Discount Input -->
                     <div class="flex gap-2">
-                        <div
-                            class="flex-1 flex items-center bg-beige-100 border border-beige-300 rounded-xl px-3 py-2 gap-2 focus-within:border-brown-200 transition-colors">
+                        <div class="flex-1 flex items-center bg-beige-100 border border-beige-300 rounded-xl px-3 py-2 gap-2 focus-within:border-brown-200 transition-colors">
                             <input type="number" name="discount" min="0" max="100" placeholder="Discount"
                                    class="bg-transparent outline-none text-sm text-brown-400 w-full placeholder-beige-400"
                                    id="discountInput">
@@ -274,13 +257,11 @@
                         </button>
                     </div>
 
-                    <!-- Total -->
                     <div class="flex justify-between items-center pt-3 border-t border-dashed border-beige-300">
                         <span class="font-playfair text-xl font-bold text-brown-500">Total</span>
                         <span class="font-playfair text-xl font-bold text-brown-300" id="TotalAmount">0</span>
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="flex gap-2 mt-1">
                         <div id="messageContainer"></div>
                         <button
@@ -292,13 +273,6 @@
                             </svg>
                             Checkout
                         </button>
-
-                        <!-- Receipt button — opens modal -->
-                        {{--<button onclick="document.getElementById('receipt-modal').classList.remove('hidden')"
-                                class="bg-beige-200 border border-beige-300 rounded-xl px-4 flex items-center justify-center text-brown-300 hover:bg-brown-100 hover:text-white hover:border-brown-100 transition-all text-xl"
-                                title="View & Print Receipt">
-                            🧾
-                        </button>--}}
                     </div>
                 </div>
             </div>
@@ -306,42 +280,26 @@
         </div>
 
 
-        <!-- ══════════════════════════════════
-             RECEIPT MODAL
-        ══════════════════════════════════ -->
+
         <div id="receipt-modal" class="hidden fixed inset-0 z-[50] flex items-center justify-center">
 
-            <!-- Backdrop -->
-            <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm"
-                 onclick='closeModal()'></div>
 
-            <!-- Modal Card -->
+            <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm" onclick='closeModal()'></div>
+
+
             <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
 
-                <!-- Top stripe -->
                 <div class="h-1.5 bg-gradient-to-r from-brown-100 via-brown-300 to-brown-100"></div>
 
-                <!-- Header -->
                 <div class="px-7 pt-6 pb-4 text-center border-b border-dashed border-beige-300">
-                    <p class="font-playfair text-2xl font-bold text-brown-400 tracking-widest">WI<span
-                            class="text-brown-100">QA</span>AR</p>
+                    <p class="font-playfair text-2xl font-bold text-brown-400 tracking-widest">WI<span class="text-brown-100">QA</span>AR</p>
                     <p class="text-xs text-brown-200 mt-1 tracking-wider uppercase font-medium">Official Receipt</p>
                     <p class="text-xs text-beige-400 mt-2" id="clock"></p>
                 </div>
 
-                <!-- Items -->
                 <div class="px-7 py-4 flex flex-col gap-2.5 border-b border-dashed border-beige-300" id="receipt">
-                    {{-- <div class="flex justify-between text-sm">
-                         <span class="text-brown-300">Archery Session <span class="text-beige-400">×2</span></span>
-                         <span class="font-medium text-brown-400">240.00 MAD</span>
-                     </div>
-                     <div class="flex justify-between text-sm">
-                         <span class="text-brown-300">Yoga Class <span class="text-beige-400">×1</span></span>
-                         <span class="font-medium text-brown-400">80.00 MAD</span>
-                     </div>--}}
                 </div>
 
-                <!-- Totals -->
                 <div class="px-7 py-4 flex flex-col gap-2 border-b border-dashed border-beige-300">
                     <div class="flex justify-between text-sm text-brown-300">
                         <span>Subtotal</span>
@@ -357,20 +315,15 @@
                     </div>
                 </div>
 
-                <!-- Footer note -->
                 <div class="px-7 py-4 text-center border-b border-dashed border-beige-300">
-                    <p class="text-xs text-beige-400 leading-relaxed">Thank you for visiting Wiqaar.<br>We hope to see
-                        you again
-                        soon.</p>
+                    <p class="text-xs text-beige-400 leading-relaxed">Thank you for visiting Wiqaar.<br>We hope to see you again soon.</p>
                 </div>
 
-                <!-- Actions -->
                 <div class="px-7 py-5 flex gap-3">
                     <button onclick="window.print()"
                             class="flex-1 bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold rounded-xl py-2.5 flex items-center justify-center gap-2 transition-all hover:shadow-md active:scale-95 text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path
-                                d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
                             <rect x="6" y="14" width="12" height="8" rx="1"/>
                         </svg>
                         Print
@@ -383,6 +336,9 @@
             </div>
         </div>
 
-        <script src="{{asset('js/script.js')}}"></script>
+        <script src="{{ asset('js/script.js') }}"></script>
+    </div>
+</div>
+
 </body>
 </html>

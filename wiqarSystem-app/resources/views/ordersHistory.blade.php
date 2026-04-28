@@ -81,21 +81,73 @@
         .chevron {
             transition: transform 0.2s ease;
         }
+
+
+        #sidebar-overlay {
+            display: none;
+        }
+
+        #sidebar-overlay.active {
+            display: block;
+        }
+
+
+        @media (max-width: 767px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 50;
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(61, 36, 16, 0.45);
+                z-index: 40;
+            }
+        }
     </style>
 </head>
 <body class="bg-beige-100 min-h-screen">
 
-<!-- HEADER -->
-<div class="flex h-screen overflow-hidden">
+<div class="md:hidden flex items-center justify-between px-4 py-3 bg-brown-400 shadow-lg sticky top-0 z-30">
+    <h1 class="font-playfair text-xl font-bold text-beige-200 tracking-widest">
+        WI<span class="text-brown-100">QA</span>AR
+    </h1>
+    <button id="menu-btn" onclick="toggleSidebar()"
+            class="w-9 h-9 rounded-xl bg-brown-300/50 flex items-center justify-center text-beige-200 hover:bg-brown-300 transition-all">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    </button>
+</div>
 
-    <aside class="w-56 shrink-0 bg-brown-400 flex flex-col h-full shadow-2xl">
-        <div class="px-5 py-5 border-b border-brown-300/40">
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="flex md:h-screen md:overflow-hidden">
+
+    <aside id="sidebar" class="w-56 shrink-0 bg-brown-400 flex flex-col h-full shadow-2xl">
+        <div class="px-5 py-5 border-b border-brown-300/40 hidden md:block">
             <h1 class="font-playfair text-2xl font-bold text-beige-200 tracking-widest">
                 WI<span class="text-brown-100">QA</span>AR
             </h1>
             <p class="text-beige-400 text-xs mt-0.5 font-light tracking-widest uppercase">{{ ucfirst(Auth::user()->role->name ?? '') }}
                 Panel</p>
         </div>
+
+        <div class="px-5 py-5 border-b border-brown-300/40 md:hidden">
+            <p class="text-beige-400 text-xs mt-0.5 font-light tracking-widest uppercase">{{ ucfirst(Auth::user()->role->name ?? '') }}
+                Panel</p>
+        </div>
+
         <nav class="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto scroll-y">
 
             <p class="text-beige-400 text-[10px] font-medium tracking-widest uppercase px-3 mb-1">Main</p>
@@ -200,121 +252,121 @@
     </aside>
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <div class="flex gap-5 p-5 h-full">
+        <div class="flex-1 overflow-y-auto scroll-y">
+            <div class="flex flex-col gap-5 p-4 md:p-5 h-full">
 
-            <!-- Title -->
-            <div>
-                <h2 class="font-playfair text-2xl font-semibold text-brown-400">All Orders</h2>
-                <p class="text-sm text-brown-200 mt-0.5">Full history of completed sessions</p>
-            </div>
+                <div>
+                    <h2 class="font-playfair text-2xl font-semibold text-brown-400">All Orders</h2>
+                    <p class="text-sm text-brown-200 mt-0.5">Full history of completed sessions</p>
+                </div>
 
-            <!-- Orders List -->
-            <div class="flex flex-col gap-3" id="ordersList">
+                <div class="flex flex-col gap-3" id="ordersList">
 
-                @forelse($orders as $order)
-                    <div class="order-card bg-white rounded-2xl border border-beige-200 shadow-sm overflow-hidden">
-                        <div class="px-5 py-4 flex items-center gap-4">
+                    @forelse($orders as $order)
+                        <div class="order-card bg-white rounded-2xl border border-beige-200 shadow-sm overflow-hidden">
+                            <div class="px-4 md:px-5 py-4 flex items-center gap-3 md:gap-4">
 
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-beige-100 border border-beige-200 flex items-center justify-center shrink-0">
+                                    <span class="font-playfair text-brown-300 text-sm font-bold">#{{ $order->id }}</span>
+                                </div>
 
-                            <div
-                                class="w-10 h-10 rounded-xl bg-beige-100 border border-beige-200 flex items-center justify-center shrink-0">
-                                <span class="font-playfair text-brown-300 text-sm font-bold">#{{ $order->id }}</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs text-beige-400">{{ $order->created_at->format('M d, Y \a\t h:i A') }}</p>
+                                </div>
+
+                                <div class="flex items-center gap-2 md:gap-3 shrink-0">
+                                    <span
+                                        class="font-playfair font-bold text-brown-300 text-sm whitespace-nowrap">{{ $order->total }} SAR</span>
+                                    <button onclick="showReceipt({{ $order->id }})"
+                                            class="text-xs font-medium text-brown-300 bg-beige-100 border border-beige-300 rounded-lg px-2.5 md:px-3 py-1.5 hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all flex items-center gap-1.5 whitespace-nowrap">
+                                        🧾 <span class="hidden sm:inline">View Receipt</span><span class="sm:hidden">View</span>
+                                    </button>
+                                </div>
+
                             </div>
-
-
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs text-beige-400">{{ $order->created_at->format('M d, Y \a\t h:i A') }}</p>
-                            </div>
-
-
-                            <div class="flex items-center gap-3 shrink-0">
-                                <span
-                                    class="font-playfair font-bold text-brown-300 text-sm">{{ $order->total }} SAR</span>
-                                <button onclick="showReceipt({{ $order->id }})"
-                                        class="text-xs font-medium text-brown-300 bg-beige-100 border border-beige-300 rounded-lg px-3 py-1.5 hover:bg-brown-300 hover:text-white hover:border-brown-300 transition-all flex items-center gap-1.5">
-                                    🧾 View Receipt
-                                </button>
-                            </div>
-
                         </div>
-                    </div>
-                @empty
-                    <div class="flex flex-col items-center justify-center py-24 text-beige-400 gap-3">
-                        <span class="text-5xl opacity-40">📋</span>
-                        <p class="text-sm text-center">No orders found.</p>
-                    </div>
-                @endforelse
-
-            </div>
-            <div id="receipt-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
-
-                <!-- Backdrop -->
-                <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm"
-                     onclick='closeModal()'></div>
-
-                <!-- Modal Card -->
-                <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
-
-                    <!-- Top stripe -->
-                    <div class="h-1.5 bg-gradient-to-r from-brown-100 via-brown-300 to-brown-100"></div>
-
-                    <!-- Header -->
-                    <div class="px-7 pt-6 pb-4 text-center border-b border-dashed border-beige-300">
-                        <p class="font-playfair text-2xl font-bold text-brown-400 tracking-widest">WI<span
-                                class="text-brown-100">QA</span>AR</p>
-                        <p class="text-xs text-brown-200 mt-1 tracking-wider uppercase font-medium">Official Receipt</p>
-                        <p class="text-xs text-beige-400 mt-2" id="clock"></p>
-                    </div>
-
-                    <!-- Items -->
-                    <div class="px-7 py-4 flex flex-col gap-2.5 border-b border-dashed border-beige-300" id="receipt">
-
-                    </div>
-
-                    <!-- Totals -->
-                    <div class="px-7 py-4 flex flex-col gap-2 border-b border-dashed border-beige-300">
-                        <div class="flex justify-between text-sm text-brown-300">
-                            <span>Subtotal</span>
-                            <span id="receiptSubtotal"></span>
+                    @empty
+                        <div class="flex flex-col items-center justify-center py-24 text-beige-400 gap-3">
+                            <span class="text-5xl opacity-40">📋</span>
+                            <p class="text-sm text-center">No orders found.</p>
                         </div>
-                        <div class="flex justify-between text-sm text-red-400">
-                            <span id="receiptDiscount"></span>
-                            <span id="receiptDiscountValue"></span>
-                        </div>
-                        <div class="flex justify-between items-center pt-2 mt-1 border-t border-beige-300">
-                            <span class="font-playfair text-lg font-bold text-brown-500">Total</span>
-                            <span class="font-playfair text-lg font-bold text-brown-300" id="total"></span>
-                        </div>
-                    </div>
+                    @endforelse
 
-                    <!-- Footer note -->
-                    <div class="px-7 py-4 text-center border-b border-dashed border-beige-300">
-                        <p class="text-xs text-beige-400 leading-relaxed">Thank you for visiting Wiqaar.<br>We hope to
-                            see you again
-                            soon.</p>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="px-7 py-5 flex gap-3">
-                        <button onclick="window.print()"
-                                class="flex-1 bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold rounded-xl py-2.5 flex items-center justify-center gap-2 transition-all hover:shadow-md active:scale-95 text-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path
-                                    d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                                <rect x="6" y="14" width="12" height="8" rx="1"/>
-                            </svg>
-                            Print
-                        </button>
-                        <button onclick="closeModal()"
-                                class="flex-1 bg-beige-200 border border-beige-300 text-brown-300 font-medium rounded-xl py-2.5 hover:bg-beige-300 transition-all text-sm active:scale-95">
-                            Close
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
-        <script src="{{asset('js/history.js')}}"></script>
 
+        <div id="receipt-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center">
+
+            <div class="absolute inset-0 bg-brown-500/40 backdrop-blur-sm"
+                 onclick='closeModal()'></div>
+
+            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+
+                <div class="h-1.5 bg-gradient-to-r from-brown-100 via-brown-300 to-brown-100"></div>
+
+                <div class="px-7 pt-6 pb-4 text-center border-b border-dashed border-beige-300">
+                    <p class="font-playfair text-2xl font-bold text-brown-400 tracking-widest">WI<span
+                            class="text-brown-100">QA</span>AR</p>
+                    <p class="text-xs text-brown-200 mt-1 tracking-wider uppercase font-medium">Official Receipt</p>
+                    <p class="text-xs text-beige-400 mt-2" id="clock"></p>
+                </div>
+
+                <div class="px-7 py-4 flex flex-col gap-2.5 border-b border-dashed border-beige-300" id="receipt">
+
+                </div>
+
+                <div class="px-7 py-4 flex flex-col gap-2 border-b border-dashed border-beige-300">
+                    <div class="flex justify-between text-sm text-brown-300">
+                        <span>Subtotal</span>
+                        <span id="receiptSubtotal"></span>
+                    </div>
+                    <div class="flex justify-between text-sm text-red-400">
+                        <span id="receiptDiscount"></span>
+                        <span id="receiptDiscountValue"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 mt-1 border-t border-beige-300">
+                        <span class="font-playfair text-lg font-bold text-brown-500">Total</span>
+                        <span class="font-playfair text-lg font-bold text-brown-300" id="total"></span>
+                    </div>
+                </div>
+
+                <div class="px-7 py-4 text-center border-b border-dashed border-beige-300">
+                    <p class="text-xs text-beige-400 leading-relaxed">Thank you for visiting Wiqaar.<br>We hope to
+                        see you again
+                        soon.</p>
+                </div>
+
+                <div class="px-7 py-5 flex gap-3">
+                    <button onclick="window.print()"
+                            class="flex-1 bg-brown-400 hover:bg-brown-500 text-beige-100 font-playfair font-semibold rounded-xl py-2.5 flex items-center justify-center gap-2 transition-all hover:shadow-md active:scale-95 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path
+                                d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            <rect x="6" y="14" width="12" height="8" rx="1"/>
+                        </svg>
+                        Print
+                    </button>
+                    <button onclick="closeModal()"
+                            class="flex-1 bg-beige-200 border border-beige-300 text-brown-300 font-medium rounded-xl py-2.5 hover:bg-beige-300 transition-all text-sm active:scale-95">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+    }
+</script>
+<script src="{{asset('js/history.js')}}"></script>
 
 </body>
 </html>
